@@ -1,0 +1,158 @@
+:root {
+    color-scheme: light;
+
+    --bg: #f4f6f9;
+    --surface: #ffffff;
+    --surface-raised: #ffffff;
+    --surface-sunken: #eef1f5;
+    --surface-hover: #f4f6f9;
+
+    --text: #0f1729;
+    --text-secondary: #4f5a6d;
+    --text-muted: #78849a;
+    --text-inverse: #ffffff;
+
+    --border: #e2e6ed;
+    --border-strong: #ced5e0;
+    --focus-ring: #2a78d6;
+
+    --accent: #2a78d6;
+    --accent-hover: #1c5cab;
+    --accent-soft: rgba(42, 120, 214, 0.1);
+    --accent-contrast: #ffffff;
+
+    --series-revenue: #2a78d6;
+    --series-expense: #eb6834;
+    --series-profit: #1baf7a;
+
+    --chart-grid: #e7eaf0;
+    --chart-axis: #c9cfdb;
+    --chart-surface: #ffffff;
+
+    --status-good: #0ca30c;
+    --status-warning: #fab219;
+    --status-serious: #ec835a;
+    --status-critical: #d03b3b;
+    --status-neutral: #78849a;
+
+    --status-good-soft: rgba(12, 163, 12, 0.12);
+    --status-warning-soft: rgba(250, 178, 25, 0.18);
+    --status-critical-soft: rgba(208, 59, 59, 0.12);
+    --status-neutral-soft: rgba(120, 132, 154, 0.14);
+
+    --delta-up: #067306;
+    --delta-down: #c02c2c;
+
+    --shadow-sm: 0 1px 2px rgba(15, 23, 41, 0.06);
+    --shadow-md: 0 2px 8px rgba(15, 23, 41, 0.07), 0 1px 2px rgba(15, 23, 41, 0.05);
+    --shadow-lg: 0 12px 32px rgba(15, 23, 41, 0.14);
+
+    --radius-sm: 6px;
+    --radius-md: 10px;
+    --radius-lg: 14px;
+    --radius-full: 999px;
+
+    --space-1: 4px;
+    --space-2: 8px;
+    --space-3: 12px;
+    --space-4: 16px;
+    --space-5: 20px;
+    --space-6: 24px;
+    --space-8: 32px;
+    --space-10: 40px;
+
+    --sidebar-width: 248px;
+    --sidebar-width-collapsed: 76px;
+    --topbar-height: 64px;
+
+    --font-sans: "Zalando Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+    --transition: 160ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+        color-scheme: dark;
+
+        --bg: #0b0e14;
+        --surface: #141821;
+        --surface-raised: #191e29;
+        --surface-sunken: #10141c;
+        --surface-hover: #1b2130;
+
+        --text: #eef1f6;
+        --text-secondary: #a7b1c2;
+        --text-muted: #7d8798;
+        --text-inverse: #0b0e14;
+
+        --border: #252b38;
+        --border-strong: #333b4b;
+        --focus-ring: #5598e7;
+
+        --accent: #3987e5;
+        --accent-hover: #5598e7;
+        --accent-soft: rgba(57, 135, 229, 0.16);
+
+        --series-revenue: #3987e5;
+        --series-expense: #d95926;
+        --series-profit: #199e70;
+
+        --chart-grid: #222836;
+        --chart-axis: #333b4b;
+        --chart-surface: #141821;
+
+        --status-good-soft: rgba(12, 163, 12, 0.18);
+        --status-warning-soft: rgba(250, 178, 25, 0.16);
+        --status-critical-soft: rgba(208, 59, 59, 0.2);
+        --status-neutral-soft: rgba(125, 135, 152, 0.18);
+
+        --delta-up: #2ec42e;
+        --delta-down: #ef6a6a;
+
+        --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+        --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.36), 0 1px 2px rgba(0, 0, 0, 0.3);
+        --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.5);
+    }
+}
+
+:root[data-theme="dark"] {
+    color-scheme: dark;
+
+    --bg: #0b0e14;
+    --surface: #141821;
+    --surface-raised: #191e29;
+    --surface-sunken: #10141c;
+    --surface-hover: #1b2130;
+
+    --text: #eef1f6;
+    --text-secondary: #a7b1c2;
+    --text-muted: #7d8798;
+    --text-inverse: #0b0e14;
+
+    --border: #252b38;
+    --border-strong: #333b4b;
+    --focus-ring: #5598e7;
+
+    --accent: #3987e5;
+    --accent-hover: #5598e7;
+    --accent-soft: rgba(57, 135, 229, 0.16);
+
+    --series-revenue: #3987e5;
+    --series-expense: #d95926;
+    --series-profit: #199e70;
+
+    --chart-grid: #222836;
+    --chart-axis: #333b4b;
+    --chart-surface: #141821;
+
+    --status-good-soft: rgba(12, 163, 12, 0.18);
+    --status-warning-soft: rgba(250, 178, 25, 0.16);
+    --status-critical-soft: rgba(208, 59, 59, 0.2);
+    --status-neutral-soft: rgba(125, 135, 152, 0.18);
+
+    --delta-up: #2ec42e;
+    --delta-down: #ef6a6a;
+
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+    --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.36), 0 1px 2px rgba(0, 0, 0, 0.3);
+    --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.5);
+}
