@@ -1,78 +1,31 @@
-import { useMemo } from "react";
-import {
-    categoryBreakdown,
-    contracts,
-    filterTransactions,
-    getPeriod,
-    monthlySeries,
-    summarize,
-    transactions,
-} from "../lib/dataset";
-import { percentChange } from "../lib/format";
+import { useEffect, useState } from "react";
+import { fetchOverview } from "../lib/api";
 
 export function useFinanceData({ months, contractId = null }) {
-    return useMemo(() => {
-        const { current, previous } = getPeriod(months);
-        const scope = contractId ? { contractId } : {};
+    const [data, setData] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
-        const currentRows = filterTransactions(transactions, { ...scope, months });
-        const previousMonths = new Set(previous);
-        const previousRows = filterTransactions(transactions, scope).filter((row) =>
-            previousMonths.has(row.monthKey),
-        );
+    useEffect(() => {
+        let cancelled = false;
+        setLoading(true);
+        setError(null);
 
-        const summary = summarize(currentRows);
-        const previousSummary = summarize(previousRows);
-        const series = monthlySeries(currentRows, current);
-
-        const monthsCovered = (rows) => new Set(rows.map((row) => row.monthKey)).size;
-        const comparable =
-            monthsCovered(currentRows) === months && monthsCovered(previousRows) === months;
-
-        const deltas = comparable
-            ? {
-                  revenue: percentChange(summary.revenue, previousSummary.revenue),
-                  expenses: percentChange(summary.expenses, previousSummary.expenses),
-                  profit: percentChange(summary.profit, previousSummary.profit),
-                  margin: previousSummary.margin
-                      ? summary.margin - previousSummary.margin
-                      : null,
-              }
-            : { revenue: null, expenses: null, profit: null, margin: null };
-
-        const contractRows = contracts
-            .map((contract) => {
-                const rows = currentRows.filter((row) => row.contractId === contract.id);
-                const totals = summarize(rows);
-
-                return {
-                    contract,
-                    revenue: totals.revenue,
-                    expenses: totals.expenses,
-                    result: totals.profit,
-                    margin: totals.margin,
-                };
+        fetchOverview({ months, contractId })
+            .then((result) => {
+                if (!cancelled) setData(result);
             })
-            .filter((row) => row.revenue > 0 || row.expenses > 0);
+            .catch((err) => {
+                if (!cancelled) setError(err);
+            })
+            .finally(() => {
+                if (!cancelled) setLoading(false);
+            });
 
-        return {
-            months: current,
-            comparable,
-            rows: currentRows,
-            summary,
-            previousSummary,
-            deltas,
-            series,
-            categories: categoryBreakdown(currentRows),
-            contractRows,
-            sparks: {
-                revenue: series.map((row) => ({ value: row.receita })),
-                expenses: series.map((row) => ({ value: row.despesa })),
-                profit: series.map((row) => ({ value: row.lucro })),
-                margin: series.map((row) => ({
-                    value: row.receita ? (row.lucro / row.receita) * 100 : 0,
-                })),
-            },
+        return () => {
+            cancelled = true;
         };
     }, [months, contractId]);
+
+    return { data, loading, error };
 }

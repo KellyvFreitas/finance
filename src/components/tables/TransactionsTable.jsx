@@ -7,7 +7,7 @@ import Pagination from "../ui/Pagination";
 import SortableHeader from "./SortableHeader";
 import { Badge } from "../ui/Badge";
 import { useSort } from "../../hooks/useSort";
-import { contractsById } from "../../lib/dataset";
+import { useContracts } from "../../app/providers/useContracts";
 import { formatCurrency, formatDate } from "../../lib/format";
 
 const ACCESSORS = {
@@ -34,6 +34,7 @@ export default function TransactionsTable({
     const [query, setQuery] = useState("");
     const [type, setType] = useState("all");
     const [page, setPage] = useState(1);
+    const { contractsById } = useContracts();
 
     const filtered = useMemo(() => {
         const term = query.trim().toLowerCase();
@@ -49,7 +50,7 @@ export default function TransactionsTable({
                 .toLowerCase()
                 .includes(term);
         });
-    }, [rows, query, type]);
+    }, [rows, query, type, contractsById]);
 
     const { sorted, sort, toggle } = useSort(filtered, ACCESSORS, {
         key: "date",

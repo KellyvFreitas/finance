@@ -11,7 +11,6 @@ import TransactionsTable from "../components/tables/TransactionsTable";
 import Card from "../components/ui/Card";
 import Skeleton from "../components/ui/Skeleton";
 import { useFinanceData } from "../hooks/useFinanceData";
-import { useSimulatedLoading } from "../hooks/useSimulatedLoading";
 import { useChartTokens } from "../hooks/useChartTokens";
 import { PERIOD_OPTIONS } from "../lib/dataset";
 import { formatCurrency, formatMonthKey, formatPercent } from "../lib/format";
@@ -35,13 +34,8 @@ function ChartSkeleton({ height = 300 }) {
 
 export default function Overview() {
     const [months, setMonths] = useState(12);
-    const loading = useSimulatedLoading();
     const tokens = useChartTokens();
-    const data = useFinanceData({ months });
-
-    const rangeLabel = `${formatMonthKey(data.months[0])} – ${formatMonthKey(
-        data.months.at(-1),
-    )}`;
+    const { data, loading, error } = useFinanceData({ months });
 
     const periodFilter = (
         <SegmentedControl
@@ -52,15 +46,35 @@ export default function Overview() {
         />
     );
 
+    if (error) {
+        return (
+            <>
+                <PageHeader title="Visão geral" actions={periodFilter} />
+                <Card>
+                    <p className="text-muted">
+                        Não foi possível carregar os dados do servidor. Verifique se o backend
+                        está rodando em {import.meta.env.VITE_API_URL ?? "http://localhost:3001"}.
+                    </p>
+                </Card>
+            </>
+        );
+    }
+
+    const rangeLabel = data
+        ? `${formatMonthKey(data.months[0])} – ${formatMonthKey(data.months.at(-1))}`
+        : "";
+
     return (
         <>
             <PageHeader
                 title="Visão geral"
-                subtitle={`Consolidado de ${data.contractRows.length} contratos · ${rangeLabel}`}
+                subtitle={
+                    data ? `Consolidado de ${data.contractRows.length} contratos · ${rangeLabel}` : ""
+                }
                 actions={periodFilter}
             />
 
-            {loading ? (
+            {loading || !data ? (
                 <>
                     <div className="grid-kpis">
                         {Array.from({ length: 4 }, (_, index) => (

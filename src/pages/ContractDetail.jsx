@@ -13,7 +13,8 @@ import TransactionsTable from "../components/tables/TransactionsTable";
 import NotFound from "./NotFound";
 import { useFinanceData } from "../hooks/useFinanceData";
 import { useChartTokens } from "../hooks/useChartTokens";
-import { contractsById, PERIOD_OPTIONS } from "../lib/dataset";
+import { useContracts } from "../app/providers/useContracts";
+import { PERIOD_OPTIONS } from "../lib/dataset";
 import {
     formatCurrency,
     formatDate,
@@ -36,11 +37,26 @@ export default function ContractDetail() {
     const { id } = useParams();
     const [months, setMonths] = useState(12);
 
+    const { contractsById, loading: contractsLoading } = useContracts();
     const contract = contractsById.get(Number(id));
     const tokens = useChartTokens();
-    const data = useFinanceData({ months, contractId: contract?.id ?? null });
+    const { data, loading, error } = useFinanceData({
+        months,
+        contractId: contract?.id ?? null,
+    });
 
+    if (contractsLoading) return null;
     if (!contract) return <NotFound />;
+
+    if (error) {
+        return (
+            <Card>
+                <p className="text-muted">Não foi possível carregar os dados do servidor.</p>
+            </Card>
+        );
+    }
+
+    if (loading || !data) return null;
 
     const rangeLabel = `${formatMonthKey(data.months[0])} – ${formatMonthKey(
         data.months.at(-1),
